@@ -261,6 +261,12 @@
     }
     .option:hover span { border-color: var(--accent-2); }
 
+    .gender-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
     .actions {
       display: flex;
       gap: 12px;
@@ -328,6 +334,25 @@
       color: #384656;
       font-size: 16px;
     }
+
+    .hero-image-wrap {
+      margin: 12px auto 18px;
+      max-width: 240px;
+    }
+    .hero-image-wrap[hidden] { display: none; }
+    .hero-image-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(31, 41, 51, 0.18);
+    }
+    .hero-image-caption {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
     .pct-badge {
       display: inline-flex;
       align-items: center;
@@ -366,6 +391,7 @@
 
     @media (max-width: 720px) {
       .options { grid-template-columns: 1fr; }
+      .gender-options { grid-template-columns: 1fr; }
       .option span { justify-content: flex-start; text-align: left; padding: 10px 12px; }
     }
   </style>
@@ -393,7 +419,25 @@
     </div>
 
     <form id="quizForm">
+      <div class="card">
+        <div class="q-title">
+          <span class="q-num">Пол</span>
+          <span>Выберите, чтобы увидеть подходящий образ героя</span>
+        </div>
+        <div class="gender-options">
+          <label class="option">
+            <input type="radio" name="gender" value="male" />
+            <span>Мужчина</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="gender" value="female" />
+            <span>Женщина</span>
+          </label>
+        </div>
+      </div>
+
       <div class="card" id="questions"></div>
+
       <div class="card">
         <div class="actions">
           <button type="submit">Показать результат</button>
@@ -406,6 +450,12 @@
     <section class="card result" id="result" aria-live="polite">
       <div class="medal" aria-hidden="true">🏛️</div>
       <h2>Ваш архетип</h2>
+      
+      <div class="hero-image-wrap" id="heroImageWrap" hidden>
+        <img id="heroImage" alt="" />
+        <p class="hero-image-caption" id="heroImageCaption"></p>
+      </div>
+
       <div class="lead" id="lead"></div>
       <p class="lead-desc" id="leadDesc"></p>
       <div class="pct-badge" id="pctBadge"></div>
@@ -423,11 +473,11 @@
 
   <script>
     const OPTIONS = [
-      { value: 1, label: "Совершенно не согласен" },
-      { value: 2, label: "Скорее не согласен" },
-      { value: 3, label: "Нейтрально" },
-      { value: 4, label: "Скорее согласен" },
-      { value: 5, label: "Полностью согласен" }
+      { display: 1, value: 5, label: "Полностью согласен" },
+      { display: 2, value: 4, label: "Скорее согласен" },
+      { display: 3, value: 3, label: "Нейтрально" },
+      { display: 4, value: 2, label: "Скорее не согласен" },
+      { display: 5, value: 1, label: "Полностью не согласен" }
     ];
 
     const ARCHETYPES = {
@@ -478,6 +528,7 @@
     });
 
     const STORAGE_KEY = "religioved_quiz_answers_v1";
+    const GENDER_KEY = "religioved_quiz_gender_v1";
 
     const form = document.getElementById("quizForm");
     const questionsBox = document.getElementById("questions");
@@ -488,6 +539,9 @@
     const pctFill = document.getElementById("pctFill");
     const hintEl = document.getElementById("hint");
     const restoreBar = document.getElementById("restoreBar");
+    const heroImageWrap = document.getElementById("heroImageWrap");
+    const heroImage = document.getElementById("heroImage");
+    const heroImageCaption = document.getElementById("heroImageCaption");
 
     /* ---------- Рендер вопросов ---------- */
     function renderQuestions() {
@@ -496,7 +550,7 @@
         const optionsHtml = OPTIONS.map(opt => `
           <label class="option">
             <input type="radio" name="${name}" value="${opt.value}" data-key="${q.key}" />
-            <span>${opt.value}. ${opt.label}</span>
+            <span>${opt.display}. ${opt.label}</span>
           </label>
         `).join("");
         return `
@@ -551,14 +605,44 @@
       return restored > 0;
     }
 
+    function saveGender() {
+      const checked = form.querySelector('input[name="gender"]:checked');
+      try {
+        if (checked) {
+          localStorage.setItem(GENDER_KEY, checked.value);
+        } else {
+          localStorage.removeItem(GENDER_KEY);
+        }
+      } catch (e) { /* localStorage недоступен */ }
+    }
+
+    function loadGender() {
+      let val;
+      try {
+        val = localStorage.getItem(GENDER_KEY);
+      } catch (e) { return false; }
+      if (!val) return false;
+
+      const input = form.querySelector(`input[name="gender"][value="${val}"]`);
+      if (input) {
+        input.checked = true;
+        return true;
+      }
+      return false;
+    }
+
     function clearSaved() {
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(GENDER_KEY);
+      } catch (e) {}
       form.reset();
       resultBox.classList.remove("visible");
       restoreBar.classList.remove("visible");
       hintEl.textContent = "Сохранённые ответы очищены. Можно начать заново.";
       hintEl.style.color = "";
       pctFill.style.width = "0%";
+      heroImageWrap.hidden = true;
     }
 
     /* ---------- Подсчёт и вывод результата ---------- */
@@ -573,6 +657,90 @@
         scores[checked.dataset.key] += Number(checked.value);
       }
       return { scores, answered };
+    }
+
+    // Обновленная функция для вывода картинок
+    function updateArchetypeImage(topKey) {
+      if (!heroImageWrap) return;
+
+      const genderInput = form.querySelector('input[name="gender"]:checked');
+      const gender = genderInput ? genderInput.value : "";
+
+      // Словарь с картинками для разных архетипов и полов
+      const imageMap = {
+        geroy: {
+          male: { src: "images/geroy-muzhchina.jpg", alt: "Человек-паук — архетип Герой", caption: "Мужской образ: Человек-паук" },
+          female: { src: "images/geroy-zhenshchina.jpg", alt: "Моана — архетип Герой", caption: "Женский образ: Моана" }
+        },
+        voin: {
+          male: { src: "images/voin-muzhchina.jpg", alt: "Ли Шан — архетип Воин", caption: "Мужской образ: Ли Шан" },
+          female: { src: "images/voin-zhenshchina.jpg", alt: "Астрид — архетип Воин", caption: "Женский образ: Астрид" }
+        },
+        pokrovitel: {
+          male: { src: "images/pokrovitel-muzhchina.jpg", alt: "Крокодил Гена — архетип Покровитель", caption: "Мужской образ: Крокодил Гена" },
+          female: { src: "images/pokrovitel-zhenshchina.jpg", alt: "Женщина — архетип Покровитель", caption: "Женский образ: Заботливая покровительница" }
+        },
+        tvorets: {
+          male: { src: "images/tvorets-muzhchina.jpg", alt: "Творец — мужской образ", caption: "Мужской образ: Творец" },
+          female: { src: "images/tvorets-zhenshchina.jpg", alt: "Рапунцель — архетип Творец", caption: "Женский образ: Рапунцель" }
+        },
+        buntar: {
+          male: { src: "images/buntar-muzhchina.jpg", alt: "Джек Воробей — архетип Бунтарь", caption: "Мужской образ: Джек Воробей" },
+          female: { src: "images/buntar-zhenshchina.jpg", alt: "Мерида — архетип Бунтарь", caption: "Женский образ: Мерида" }
+        },
+        iskatel: {
+          male: { src: "images/iskatel-muzhchina.jpg", alt: "Чебурашка — архетип Искатель", caption: "Мужской образ: Чебурашка" },
+          female: { src: "images/iskatel-zhenshchina.jpg", alt: "Анна — архетип Искатель", caption: "Женский образ: Анна" }
+        },
+        providets: {
+          male: { src: "images/providets-muzhchina.jpg", alt: "Шерлок Холмс — архетип Провидец", caption: "Мужской образ: Шерлок Холмс" },
+          female: { src: "images/providets-zhenshchina.jpg", alt: "Принцесса Луна — архетип Провидец", caption: "Женский образ: Принцесса Луна" }
+        },
+        mudrets: {
+          male: { src: "images/mudrets-muzhchina.jpg", alt: "Мастер Угвэй — архетип Мудрец", caption: "Мужской образ: Мастер Угвэй" },
+          female: { src: "images/mudrets-zhenshchina.jpg", alt: "Василиса Премудрая — архетип Мудрец", caption: "Женский образ: Василиса Премудрая" }
+        },
+        pravitel: {
+          male: { src: "images/pravitel-muzhchina.jpg", alt: "Черная Пантера — архетип Правитель", caption: "Мужской образ: Черная Пантера" },
+          female: { src: "images/pravitel-zhenshchina.jpg", alt: "Принцесса Лея — архетип Правитель", caption: "Женский образ: Принцесса Лея" }
+        },
+        volshebnik: {
+          male: { src: "images/volshebnik-muzhchina.jpg", alt: "Дамблдор — архетип Волшебник", caption: "Мужской образ: Дамблдор" },
+          female: { src: "images/volshebnik-zhenshchina.jpg", alt: "Баба-Яга — архетип Волшебник", caption: "Женский образ: Баба-Яга" }
+        },
+        chempion: {
+          male: { src: "images/chempion-muzhchina.jpg", alt: "Геркулес — архетип Чемпион", caption: "Мужской образ: Геркулес" },
+          female: { src: "images/chempion-zhenshchina.jpg", alt: "Чемпионка — архетип Чемпион", caption: "Женский образ: Чемпионка" }
+        },
+        nastavnik: {
+          male: { src: "images/nastavnik-muzhchina.jpg", alt: "Йода — архетип Наставник", caption: "Мужской образ: Мастер Йода" },
+          female: { src: "images/nastavnik-zhenshchina.jpg", alt: "Гермиона — архетип Наставник", caption: "Женский образ: Гермиона Грейнджер" }
+        }
+      };
+
+      const currentArchetypeImages = imageMap[topKey];
+
+      // Если для этого архетипа нет картинок или не выбран пол — скрываем блок
+      if (!currentArchetypeImages || !currentArchetypeImages[gender]) {
+        heroImageWrap.hidden = true;
+        heroImage.removeAttribute("src");
+        heroImageCaption.textContent = "";
+        return;
+      }
+
+      const imgData = currentArchetypeImages[gender];
+
+      heroImage.style.display = "";
+      heroImage.onerror = function () {
+        this.style.display = "none";
+        heroImageCaption.textContent =
+          "Не найдено изображение. Добавьте файл в папку images или измените путь в updateArchetypeImage().";
+      };
+
+      heroImage.src = imgData.src;
+      heroImage.alt = imgData.alt;
+      heroImageCaption.textContent = imgData.caption;
+      heroImageWrap.hidden = false;
     }
 
     function showResult() {
@@ -603,14 +771,21 @@
       pctFill.style.width = "0%";
       requestAnimationFrame(() => { pctFill.style.width = roundedPct + "%"; });
 
+      updateArchetypeImage(top.key);
+
       resultBox.classList.add("visible");
       resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     /* ---------- Обработчики ---------- */
     form.addEventListener("change", (e) => {
-      if (e.target && e.target.matches('input[type="radio"]')) {
-        saveAnswers();
+      const target = e.target;
+      if (target && target.matches('input[type="radio"]')) {
+        if (target.name === "gender") {
+          saveGender();
+        } else {
+          saveAnswers();
+        }
       }
     });
 
@@ -623,9 +798,11 @@
       form.reset();
       resultBox.classList.remove("visible");
       pctFill.style.width = "0%";
+      heroImageWrap.hidden = true;
       hintEl.textContent = "Ответьте, пожалуйста, на все вопросы. Это займёт около 5–7 минут.";
       hintEl.style.color = "";
-      saveAnswers(); // очистит сохранённое, т.к. ответов больше нет
+      saveAnswers();
+      saveGender();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
@@ -674,8 +851,9 @@
     /* ---------- Запуск ---------- */
     renderQuestions();
 
-    const restored = loadAnswers();
-    if (restored) {
+    const restoredAnswers = loadAnswers();
+    const restoredGender = loadGender();
+    if (restoredAnswers || restoredGender) {
       restoreBar.classList.add("visible");
       hintEl.textContent = "Ваши предыдущие ответы восстановлены. Можно продолжить или начать заново.";
     }
