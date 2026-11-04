@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Какой ты религиовед? (12 архетипов)</title>
+  <style>
+    :root {
+      --text: #1f2933;
+      --muted: #5f6b7a;
+      --accent: #3b5b8c;
+      --accent-2: #7a9cc6;
+      --line: #d9dee7;
+      --ok: #2f7d5c;
+      --card: rgba(255, 255, 255, 0.95);
+      --gold: #b8860b;
+    }
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.5;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 240, 200, 0.95) 0%, rgba(255, 220, 150, 0.45) 12%, transparent 30%),
+        radial-gradient(circle at 50% 15%, rgba(255, 245, 210, 0.7) 0%, transparent 25%),
+        linear-gradient(180deg,
+          #6f9cc4 0%,
+          #8eb8d9 15%,
+          #b8d0e5 35%,
+          #dde7ef 50%,
+          #f0e6cf 70%,
+          #dcc9a5 90%,
+          #c9b48f 100%);
+      background-attachment: fixed;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: 28vh;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(201, 180, 143, 0.15) 40%, rgba(180, 156, 118, 0.35) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; bottom: 0;
+      left: 0; right: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 800' preserveAspectRatio='none'><rect width='90' height='38' fill='%23f3ecdd'/><rect y='38' width='90' height='724' fill='%23e8ddc3'/><line x1='16' y1='44' x2='16' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='30' y1='44' x2='30' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='44' y1='44' x2='44' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='58' y1='44' x2='58' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='72' y1='44' x2='72' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><rect y='762' width='90' height='38' fill='%23f3ecdd'/><rect y='756' width='90' height='8' fill='%23d8c8a8'/></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 800' preserveAspectRatio='none'><rect width='90' height='38' fill='%23f3ecdd'/><rect y='38' width='90' height='724' fill='%23e8ddc3'/><line x1='16' y1='44' x2='16' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='30' y1='44' x2='30' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='44' y1='44' x2='44' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='58' y1='44' x2='58' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><line x1='72' y1='44' x2='72' y2='756' stroke='%23cdbf9f' stroke-width='1.6'/><rect y='762' width='90' height='38' fill='%23f3ecdd'/><rect y='756' width='90' height='8' fill='%23d8c8a8'/></svg>");
+      background-repeat: no-repeat, no-repeat;
+      background-position: left center, right center;
+      background-size: 90px 100%, 90px 100%;
+      opacity: 0.9;
+    }
+    @media (max-width: 900px) {
+      body::after { display: none; }
+    }
+
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px 110px 56px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 900px) {
+      .wrap { padding: 20px 16px 48px; }
+    }
+
+    .meander-band {
+      height: 26px;
+      margin: 0 0 18px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.55);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='26' viewBox='0 0 60 26'><rect width='60' height='26' fill='none'/><path d='M6 6 H42 V20 H18 V12 H32 V16 H24' stroke='%233b5b8c' stroke-width='2' fill='none'/><line x1='42' y1='6' x2='54' y2='6' stroke='%233b5b8c' stroke-width='2'/><line x1='0' y1='24' x2='60' y2='24' stroke='%233b5b8c' stroke-width='1'/></svg>");
+      background-repeat: repeat-x;
+      background-size: 60px 26px;
+      box-shadow: 0 4px 20px rgba(31, 41, 51, 0.08);
+    }
+
+    header {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 40px rgba(31, 41, 51, 0.12);
+      backdrop-filter: blur(6px);
+      position: relative;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      left: 24px; right: 24px; bottom: 10px;
+      height: 8px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='8' viewBox='0 0 30 8'><path d='M2 2 H14 V6 H6 V4 H10' stroke='%233b5b8c' stroke-width='1.2' fill='none' opacity='0.5'/></svg>");
+      background-repeat: repeat-x;
+      opacity: 0.6;
+    }
+
+    .header-content {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding-bottom: 8px;
+    }
+    .header-text { flex: 1 1 320px; min-width: 0; }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.15;
+      color: #1b2a44;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0.2px;
+    }
+    .subtitle { color: var(--muted); margin: 0; }
+
+    .qr-box {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      min-width: 150px;
+    }
+    #qrcode {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 140px;
+      height: 140px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #qrcode img,
+    #qrcode canvas { display: block; max-width: 100%; height: auto; }
+    .qr-note {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin: 0;
+      line-height: 1.3;
+      max-width: 150px;
+    }
+    .qr-note.placeholder { padding: 6px; }
+    @media (max-width: 560px) {
+      .header-content { flex-direction: column; align-items: stretch; }
+      .qr-box { align-self: center; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 40px rgba(31, 41, 51, 0.1);
+      backdrop-filter: blur(6px);
+    }
+
+    .restore-bar {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      background: rgba(59, 91, 140, 0.08);
+      border: 1px solid rgba(59, 91, 140, 0.18);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--accent);
+    }
+    .restore-bar.visible { display: flex; }
+    .restore-bar .grow { flex: 1 1 auto; }
+    .link-btn {
+      appearance: none;
+      background: transparent;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .link-btn:hover { background: rgba(59, 91, 140, 0.12); }
+
+    .question {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .question:last-child { border-bottom: none; }
+    .q-title {
+      font-weight: 650;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .q-num {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .option {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .option span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 8px 6px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      transition: 0.15s ease;
+      user-select: none;
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .option input:checked + span {
+      border-color: var(--accent);
+      background: #e9f0fa;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .option:hover span { border-color: var(--accent-2); }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 8px;
+    }
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      transition: 0.15s ease;
+      box-shadow: 0 4px 14px rgba(59, 91, 140, 0.25);
+    }
+    button:hover { filter: brightness(1.07); transform: translateY(-1px); }
+    button.secondary {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--accent);
+      box-shadow: 0 4px 14px rgba(31, 41, 51, 0.08);
+    }
+    .hint { color: var(--muted); font-size: 14px; }
+
+    .result {
+      display: none;
+      text-align: center;
+      padding: 32px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .result.visible { display: block; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .medal {
+      font-size: 54px;
+      line-height: 1;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 6px 12px rgba(184, 134, 11, 0.35));
+    }
+    .result h2 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .lead {
+      font-size: clamp(26px, 4vw, 34px);
+      font-weight: 800;
+      color: #1b2a44;
+      margin: 6px 0 14px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .lead-desc {
+      max-width: 560px;
+      margin: 0 auto 20px;
+      color: #384656;
+      font-size: 16px;
+    }
+    .pct-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f6e8b8, #e8d18f);
+      color: #6b4d00;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: inset 0 0 0 1px rgba(184, 134, 11, 0.25);
+    }
+    .pct-bar {
+      width: 220px;
+      max-width: 100%;
+      height: 10px;
+      background: rgba(59, 91, 140, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 18px auto 6px;
+    }
+    .pct-bar > div {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent));
+      transition: width 0.6s ease;
+    }
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 18px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 720px) {
+      .options { grid-template-columns: 1fr; }
+      .option span { justify-content: flex-start; text-align: left; padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="meander-band" aria-hidden="true"></div>
+
+    <header>
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Какой ты религиовед?</h1>
+          <p class="subtitle">Тест на 12 архетипов. 24 утверждения, шкала 1–5. Победитель — архетип с наибольшим процентом от максимума.</p>
+        </div>
+        <div class="qr-box" aria-label="QR-код для быстрого открытия теста">
+          <div id="qrcode"></div>
+          <p class="qr-note" id="qrNote">Откройте с телефона</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="restore-bar" id="restoreBar">
+      <span class="grow">Ваши предыдущие ответы восстановлены. Можно продолжить или начать заново.</span>
+      <button type="button" class="link-btn" id="clearSavedBtn">Очистить сохранённые ответы</button>
+    </div>
+
+    <form id="quizForm">
+      <div class="card" id="questions"></div>
+      <div class="card">
+        <div class="actions">
+          <button type="submit">Показать результат</button>
+          <button type="button" class="secondary" id="resetBtn">Сбросить</button>
+        </div>
+        <p class="hint" id="hint">Ответьте, пожалуйста, на все вопросы. Это займёт около 5–7 минут.</p>
+      </div>
+    </form>
+
+    <section class="card result" id="result" aria-live="polite">
+      <div class="medal" aria-hidden="true">🏛️</div>
+      <h2>Ваш архетип</h2>
+      <div class="lead" id="lead"></div>
+      <p class="lead-desc" id="leadDesc"></p>
+      <div class="pct-badge" id="pctBadge"></div>
+      <div class="pct-bar"><div id="pctFill" style="width:0%"></div></div>
+      <p class="note">
+        Доминирующий архетип определён по наибольшему проценту от максимума.
+        Поскольку у архетипов разное число вопросов (от 1 до 3), процент уравнивает их шансы.
+        Результат не является «диагнозом» — это повод подумать о своих сильных сторонах.
+      </p>
+    </section>
+  </div>
+
+  <!-- QR-код: библиотека qrcodejs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    const OPTIONS = [
+      { value: 1, label: "Совершенно не согласен" },
+      { value: 2, label: "Скорее не согласен" },
+      { value: 3, label: "Нейтрально" },
+      { value: 4, label: "Скорее согласен" },
+      { value: 5, label: "Полностью согласен" }
+    ];
+
+    const ARCHETYPES = {
+      providets: { label: "Провидец", desc: "Вы верите, что ситуацию можно улучшить, и склонны улучшать вещи, даже когда они уже работают. Ваша сила — видеть потенциал там, где другие видят данность." },
+      nastavnik: { label: "Наставник", desc: "Вы доверяете людям и цените эмоциональную близость. Умеете создавать глубокий контакт и поддерживать другого в трудную минуту." },
+      buntar: { label: "Бунтарь", desc: "Вы предпочитаете равенство без лишнего пафоса и готовы оспорить правило, если оно не работает. Ваша сила — в честности и внутренней свободе." },
+      pokrovitel: { label: "Покровитель", desc: "Вам важно быть частью команды и замечать, когда человеку нужна поддержка. Вы заботитесь о людях и создаёте ощущение защищённости." },
+      geroy: { label: "Герой", desc: "Вас мотивируют сложные цели и преодоление препятствий. Вы готовы брать на себя вызов и вести за собой." },
+      voin: { label: "Воин", desc: "В трудностях вы чаще усиливаете темп, а не отступаете. Ваша сила — в стойкости и решительности." },
+      chempion: { label: "Чемпион", desc: "Вам важно быть полезным и заботиться о близких; юмор и лёгкость помогают вам справляться со стрессом. Вы соединяете ответственность с игрой." },
+      iskatel: { label: "Искатель", desc: "Новые места, идеи и форматы вдохновляют вас. Вы цените свободу выбора больше, чем предсказуемость." },
+      volshebnik: { label: "Волшебник", desc: "Вы готовы менять устаревшие процессы и превращать сложные идеи в работающие решения. Ваша сила — в преобразовании." },
+      tvorets: { label: "Творец", desc: "Для вас важны эстетика и атмосфера; вы любите придумывать новые решения и форматы. Вы чувствуете среду и создаёте новое." },
+      mudrets: { label: "Мудрец", desc: "Перед важным решением вы предпочитаете собрать данные и понять причину, а не только симптом. Вы цените обоснованность и глубину." },
+      pravitel: { label: "Правитель", desc: "Вы видите общую картину и точки системных изменений, берёте ответственность за порядок и результат команды. Умеете выстраивать правила для стабильной работы." }
+    };
+
+    const QUESTIONS = [
+      { text: "Даже в сложной ситуации я обычно верю, что всё можно улучшить.", key: "providets" },
+      { text: "Мне проще доверять людям, пока не доказано обратное.", key: "nastavnik" },
+      { text: "Я предпочитаю быть на равных и без лишнего пафоса.", key: "buntar" },
+      { text: "Мне важно чувствовать, что я часть команды или сообщества.", key: "pokrovitel" },
+      { text: "Я мотивирован сложными целями и люблю преодолевать препятствия.", key: "geroy" },
+      { text: "Когда трудно, я чаще усиливаю темп, а не отступаю.", key: "voin" },
+      { text: "Я часто замечаю, когда человеку нужна поддержка.", key: "pokrovitel" },
+      { text: "Мне важно быть полезным и заботиться о близких.", key: "chempion" },
+      { text: "Новые места, идеи и форматы меня обычно вдохновляют.", key: "iskatel" },
+      { text: "Я ценю свободу выбора больше, чем предсказуемость.", key: "iskatel" },
+      { text: "Если правило не работает, я готов его оспорить.", key: "buntar" },
+      { text: "Мне важно менять устаревшие процессы, даже если это неудобно.", key: "volshebnik" },
+      { text: "Для меня важны эмоциональная близость и глубина контакта.", key: "nastavnik" },
+      { text: "Эстетика и атмосфера сильно влияют на моё состояние.", key: "tvorets" },
+      { text: "Мне нравится придумывать новые решения и форматы.", key: "tvorets" },
+      { text: "Я часто улучшаю вещи, даже когда они уже работают.", key: "providets" },
+      { text: "Юмор помогает мне справляться со стрессом.", key: "chempion" },
+      { text: "Мне легко вносить лёгкость и игру в общение.", key: "chempion" },
+      { text: "Перед важным решением я предпочитаю собрать данные.", key: "mudrets" },
+      { text: "Мне важно понять причину, а не только симптом.", key: "mudrets" },
+      { text: "Я люблю видеть общую картину и точки системного изменения.", key: "pravitel" },
+      { text: "Меня вдохновляет превращать сложные идеи в работающие решения.", key: "volshebnik" },
+      { text: "Я часто беру ответственность за порядок и результат команды.", key: "pravitel" },
+      { text: "Мне важно выстраивать правила, чтобы система работала стабильно.", key: "pravitel" }
+    ];
+
+    const QUESTION_COUNT = {};
+    QUESTIONS.forEach(q => {
+      QUESTION_COUNT[q.key] = (QUESTION_COUNT[q.key] || 0) + 1;
+    });
+
+    const STORAGE_KEY = "religioved_quiz_answers_v1";
+
+    const form = document.getElementById("quizForm");
+    const questionsBox = document.getElementById("questions");
+    const resultBox = document.getElementById("result");
+    const leadEl = document.getElementById("lead");
+    const leadDescEl = document.getElementById("leadDesc");
+    const pctBadge = document.getElementById("pctBadge");
+    const pctFill = document.getElementById("pctFill");
+    const hintEl = document.getElementById("hint");
+    const restoreBar = document.getElementById("restoreBar");
+
+    /* ---------- Рендер вопросов ---------- */
+    function renderQuestions() {
+      questionsBox.innerHTML = QUESTIONS.map((q, i) => {
+        const name = "q" + (i + 1);
+        const optionsHtml = OPTIONS.map(opt => `
+          <label class="option">
+            <input type="radio" name="${name}" value="${opt.value}" data-key="${q.key}" />
+            <span>${opt.value}. ${opt.label}</span>
+          </label>
+        `).join("");
+        return `
+          <div class="question">
+            <div class="q-title">
+              <span class="q-num">Вопрос ${i + 1}</span>
+              <span>${q.text}</span>
+            </div>
+            <div class="options">${optionsHtml}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    /* ---------- Сохранение / восстановление ответов ---------- */
+    function saveAnswers() {
+      const answers = {};
+      for (let i = 0; i < QUESTIONS.length; i++) {
+        const checked = form.querySelector(`input[name="q${i + 1}"]:checked`);
+        if (checked) answers[i + 1] = Number(checked.value);
+      }
+      try {
+        if (Object.keys(answers).length === 0) {
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+        }
+      } catch (e) { /* localStorage недоступен — молча пропускаем */ }
+    }
+
+    function loadAnswers() {
+      let raw;
+      try {
+        raw = localStorage.getItem(STORAGE_KEY);
+      } catch (e) { return false; }
+      if (!raw) return false;
+
+      let answers;
+      try {
+        answers = JSON.parse(raw);
+      } catch (e) { return false; }
+      if (!answers || typeof answers !== "object") return false;
+
+      let restored = 0;
+      Object.entries(answers).forEach(([num, val]) => {
+        const input = form.querySelector(`input[name="q${num}"][value="${val}"]`);
+        if (input) {
+          input.checked = true;
+          restored++;
+        }
+      });
+      return restored > 0;
+    }
+
+    function clearSaved() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      form.reset();
+      resultBox.classList.remove("visible");
+      restoreBar.classList.remove("visible");
+      hintEl.textContent = "Сохранённые ответы очищены. Можно начать заново.";
+      hintEl.style.color = "";
+      pctFill.style.width = "0%";
+    }
+
+    /* ---------- Подсчёт и вывод результата ---------- */
+    function collectScores() {
+      const scores = {};
+      Object.keys(ARCHETYPES).forEach(key => { scores[key] = 0; });
+      let answered = 0;
+      for (let i = 0; i < QUESTIONS.length; i++) {
+        const checked = form.querySelector(`input[name="q${i + 1}"]:checked`);
+        if (!checked) continue;
+        answered++;
+        scores[checked.dataset.key] += Number(checked.value);
+      }
+      return { scores, answered };
+    }
+
+    function showResult() {
+      const { scores, answered } = collectScores();
+
+      if (answered < QUESTIONS.length) {
+        hintEl.textContent = `Вы ответили на ${answered} из ${QUESTIONS.length} вопросов. Пожалуйста, ответьте на все вопросы.`;
+        hintEl.style.color = "#b23b3b";
+        return;
+      }
+      hintEl.textContent = "Ответы приняты. Ниже — ваш результат.";
+      hintEl.style.color = "";
+
+      const ranked = Object.keys(ARCHETYPES).map(key => {
+        const score = scores[key];
+        const maxScore = (QUESTION_COUNT[key] || 0) * 5;
+        const pct = maxScore > 0 ? (score / maxScore) * 100 : 0;
+        return { key, score, maxScore, pct };
+      });
+      ranked.sort((a, b) => b.pct - a.pct || b.score - a.score);
+
+      const top = ranked[0];
+      const roundedPct = Math.round(top.pct);
+
+      leadEl.textContent = "Вы — " + ARCHETYPES[top.key].label;
+      leadDescEl.textContent = ARCHETYPES[top.key].desc;
+      pctBadge.textContent = `Совпадение: ${roundedPct}%`;
+      pctFill.style.width = "0%";
+      requestAnimationFrame(() => { pctFill.style.width = roundedPct + "%"; });
+
+      resultBox.classList.add("visible");
+      resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    /* ---------- Обработчики ---------- */
+    form.addEventListener("change", (e) => {
+      if (e.target && e.target.matches('input[type="radio"]')) {
+        saveAnswers();
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      showResult();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      form.reset();
+      resultBox.classList.remove("visible");
+      pctFill.style.width = "0%";
+      hintEl.textContent = "Ответьте, пожалуйста, на все вопросы. Это займёт около 5–7 минут.";
+      hintEl.style.color = "";
+      saveAnswers(); // очистит сохранённое, т.к. ответов больше нет
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("clearSavedBtn").addEventListener("click", clearSaved);
+
+    /* ---------- QR-код ---------- */
+    function renderQR() {
+      const container = document.getElementById("qrcode");
+      const note = document.getElementById("qrNote");
+      const url = window.location.href;
+      const isFile = window.location.protocol === "file:";
+
+      if (isFile) {
+        container.innerHTML = "";
+        note.textContent = "QR-код появится после размещения сайта в интернете (сейчас страница открыта локально).";
+        note.classList.add("placeholder");
+        return;
+      }
+
+      if (typeof QRCode === "undefined") {
+        container.innerHTML = "";
+        note.textContent = "Не удалось загрузить генератор QR-кода. Проверьте подключение к интернету.";
+        note.classList.add("placeholder");
+        return;
+      }
+
+      try {
+        container.innerHTML = "";
+        new QRCode(container, {
+          text: url,
+          width: 140,
+          height: 140,
+          colorDark: "#1b2a44",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        note.textContent = "Наведите камеру телефона, чтобы открыть тест";
+        note.classList.remove("placeholder");
+      } catch (err) {
+        container.innerHTML = "";
+        note.textContent = "Не удалось создать QR-код.";
+        note.classList.add("placeholder");
+      }
+    }
+
+    /* ---------- Запуск ---------- */
+    renderQuestions();
+
+    const restored = loadAnswers();
+    if (restored) {
+      restoreBar.classList.add("visible");
+      hintEl.textContent = "Ваши предыдущие ответы восстановлены. Можно продолжить или начать заново.";
+    }
+
+    renderQR();
+  </script>
+</body>
+</html>
